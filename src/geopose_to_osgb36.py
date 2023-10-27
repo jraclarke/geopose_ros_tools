@@ -6,7 +6,7 @@ import pyproj
 import tf
 import math
 from geometry_msgs.msg import PoseStamped
-from geopose_msgs.msg import GeoPoseBasicYPR
+from geopose_msgs.msg import GeoPoseBasicYPRStamped
 import time
 from math import pi
 
@@ -15,8 +15,6 @@ class Gnss_bng_conv(object):
 
     def __init__(self):
         self.last_alt = 0
-        self.p1 = pyproj.Proj(init='epsg:{0}'.format(4326))
-        self.p2 = pyproj.Proj(init='epsg:{0}'.format(27700))
         self.transformer = pyproj.Transformer.from_crs(4326, 27700)
         self.i = 0
         self.geopose_bng = PoseStamped()
@@ -36,8 +34,8 @@ class Gnss_bng_conv(object):
         # self.geopose_bng.header.stamp = msg.header.stamp
         self.geopose_bng.header.stamp = rospy.Time.now()
         start = time.time()
-        x, y, z = self.coord_transform(msg.position.lon,
-                                       msg.position.lat, msg.position.h)
+        x, y, z = self.coord_transform(msg.geoposebasicypr.position.lon,
+                                       msg.geoposebasicypr.position.lat, msg.geoposebasicypr.position.h)
         end = time.time()
         # print('time elapsed = {0}'.format(end-start))
         # Correct for Geoid
@@ -47,9 +45,9 @@ class Gnss_bng_conv(object):
         self.geopose_bng.pose.position.x = x
         self.geopose_bng.pose.position.y = y
         self.geopose_bng.pose.position.z = z
-        roll = msg.angles.roll * (pi / 180)
-        pitch = msg.angles.pitch * (pi / 180)
-        yaw = msg.angles.yaw * (pi / 180)
+        roll = msg.geoposebasicypr.angles.roll * (pi / 180)
+        pitch = msg.geoposebasicypr.angles.pitch * (pi / 180)
+        yaw = msg.geoposebasicypr.angles.yaw * (pi / 180)
         quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
         self.geopose_bng.pose.orientation.x = quaternion[0]
         self.geopose_bng.pose.orientation.y = quaternion[1]
@@ -69,9 +67,11 @@ class Gnss_bng_conv(object):
                          "map")
 
     def run(self):
+        rate = 100
         rospy.init_node('gnss_bng_conv', anonymous=True)
-        loop_rate = rospy.Rate(100)  # 10hz
-        rospy.Subscriber("/geopose", GeoPoseBasicYPR, self.fix_callback)
+        loop_rate = rospy.Rate(rate)  # 10hz
+        rospy.loginfo("Publishing /geopose_bng at {0} Hz.".format(rate))
+        rospy.Subscriber("/geopose", GeoPoseBasicYPRStamped, self.fix_callback)
 
         pub_geopose_bng = rospy.Publisher('geopose_bng', PoseStamped, queue_size=20)
 
