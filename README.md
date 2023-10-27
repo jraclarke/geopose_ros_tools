@@ -1,2 +1,2 @@
 # geopose_tools
-Tools for the support of  GeoPose standard implementations
+Tools for the support of GeoPose standard implementations in ROS.
