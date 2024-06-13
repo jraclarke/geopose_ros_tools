@@ -15,6 +15,7 @@ setup(
         # Include all launch files.
         (os.path.join('share', package_name, 'launch'), ['launch/launch.py']),
         (os.path.join('share', package_name, "resource"), glob.glob('resource/*')),
+        (os.path.join('share', package_name, "config"), glob.glob('config/*')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,

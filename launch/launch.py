@@ -1,9 +1,20 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node
-import subprocess
+import os
+from ament_index_python.packages import get_package_share_directory
+
 
 def generate_launch_description():
+    rviz_config_path = os.path.join(get_package_share_directory(
+        'geopose_ros_tools'), 'config', 'geopose_ros_tools.rviz')
+    assert os.path.exists(rviz_config_path)
+
     return LaunchDescription([
+        Node(
+            package='geopose_ros_tools',
+            executable='publish_ply_pointcloud',
+            name='publish_ply_pointcloud',
+        ),
         Node(
             package='tf2_ros',  # ROS2 package for static_transform_publisher
             executable='static_transform_publisher',
@@ -24,13 +35,14 @@ def generate_launch_description():
             output='screen'  # Assuming ROS2 logging replaces screen output
         ),
         Node(
-            package='geopose_ros_tools',
-            executable='publish_ply_pointcloud',
-            name='publish_ply_pointcloud',
-        ),
+             package='rviz2',
+             executable='rviz2',
+             name='rviz2',
+             arguments=['-d', rviz_config_path],
+             output='screen'
+             ),
     ])
 
 # Launch the nodes
 ld = generate_launch_description()
 print(ld)  # Optional: Print the launch description for debugging
-#subprocess.call(["ros2", "lifecycle", "set", "publish_ply_pointcloud", "shutdown"])

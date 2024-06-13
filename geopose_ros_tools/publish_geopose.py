@@ -23,7 +23,7 @@ class OGCGeoposePublisher(Node):
                                       'STREETDRONE.INS.2023-04-25T113136.000.csv'))
         self.timer = self.create_timer(self.time_period, self.run_publisher)
         self.iters = self.df.shape[0] / self.r_factor
-        self.i = 5000
+        self.i = 3700 # Remove the chaff (data contains stationary vehicle - start when the vehicle is moving.).
 
     def populate_geopose_ypr(self, iter, geopose_ypr_stamped):
         ros_time = + (self.df['Time (GPS µs)'][iter] / 1000000) + 315964782
