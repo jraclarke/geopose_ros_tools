@@ -16,7 +16,7 @@ class PC2Publisher(Node):
     def __init__(self):
         super().__init__('pcd_publisher_node')
         ply_path = os.path.join(get_package_share_directory('geopose_ros_tools'), 'resource',
-                                      'oshq_and_ap_north_capture_post_boresight_fix_bng_sm10.ply')
+                                      'STREETDRONE.POINTCLOUD_BNG.2024-05-03T171508.000.ply')
 
         # Use Open3D to read point clouds and meshes.
         pcd = o3d.io.read_point_cloud(ply_path)
