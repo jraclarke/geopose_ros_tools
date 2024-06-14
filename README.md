@@ -1,5 +1,20 @@
 # geopose_ros_tools
-Tools for the support of GeoPose standard implementations in ROS.
+
+This repo contains the package/nodes for ROS2 to generate sample GeoPose messages and visualise them.  Once installed and built, everything can be run by calling the included launch file.
+
+# Installation Instructions
+
+* Clone this the OGC_Geopose_msgs repo into your ROS2 workspace.  e.g.
+  
+<br>```cd ros2_ws/src```
+<br>```git clone https://github.com/jraclarke/ogc_geopose_msgs.git```
+<br>```git clone https://github.com/jraclarke/geopose_ros_tools.git```
+
+* Run the following:
+
+<br>```cd geopose_ros_tools/resource/ ; ./download_pointcloud.sh```
+<br>```cd ../../.. ; colcon build; source ~/.bashrc```
+<br>```ros2 launch geopose_ros_tools launch.py```
 
 # What is GeoPose?
 
